@@ -1,3 +1,3 @@
 module github.com/GargAnshu9468/vortexmq
 
-go 1.25.4
+go 1.23.0
