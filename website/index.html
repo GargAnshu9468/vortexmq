@@ -1037,54 +1037,93 @@
 
         /* QUICKSTART CODE TABS */
         .quickstart-box {
-            background: #0c101b;
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
+            background: #090d16;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            border-radius: 16px;
             overflow: hidden;
             margin-bottom: 90px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 243, 255, 0.06);
         }
 
         .code-tabs {
             display: flex;
-            background: #080b13;
+            align-items: center;
+            background: #06080f;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             overflow-x: auto;
         }
+
+        .window-dots {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0 18px;
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            height: 48px;
+        }
+        .window-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-red { background: #ff5f56; box-shadow: 0 0 6px rgba(255, 95, 86, 0.4); }
+        .dot-yellow { background: #ffbd2e; box-shadow: 0 0 6px rgba(255, 189, 46, 0.4); }
+        .dot-green { background: #27c93f; box-shadow: 0 0 6px rgba(39, 201, 63, 0.4); }
 
         .tab-btn {
             background: transparent;
             border: none;
             color: var(--text-sub);
-            padding: 14px 24px;
-            font-size: 0.9rem;
+            padding: 14px 22px;
+            font-size: 0.88rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             border-bottom: 2px solid transparent;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
         }
-        .tab-btn:hover { color: #fff; }
+        .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.03); }
         .tab-btn.active {
             color: var(--accent-cyan);
             border-bottom-color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.04);
+            background: rgba(0, 243, 255, 0.06);
         }
 
         .tab-pane {
             display: none;
-            padding: 24px;
+            padding: 26px 28px;
             position: relative;
+            background: #070a12;
         }
         .tab-pane.active { display: block; }
 
         .tab-pane pre {
             font-family: var(--font-mono);
-            font-size: 0.88rem;
-            line-height: 1.6;
-            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #cbd5e1;
             overflow-x: auto;
         }
+
+        /* Syntax Highlighting Tokens */
+        .tok-kw   { color: #ff79c6; font-weight: 600; } /* Keywords: package, import, func, const, await, def */
+        .tok-fn   { color: #38bdf8; font-weight: 600; } /* Functions: main, NewClient, LPush, BRPop */
+        .tok-str  { color: #4ade80; }                   /* Strings: green */
+        .tok-com  { color: #64748b; font-style: italic; } /* Comments: slate */
+        .tok-num  { color: #fb923c; font-weight: 600; } /* Numbers/Booleans: orange */
+        .tok-type { color: #c084fc; font-weight: 600; } /* Types: purple */
+        .tok-var  { color: #f8fafc; }                   /* Variables: white */
+        .tok-op   { color: #f43f5e; }                   /* Operators: rose */
+        .tok-cmd  { color: #00f3ff; font-weight: 700; } /* Commands: cyan */
+        .tok-flag { color: #fb923c; }                   /* Flags: orange */
+        .tok-prompt { color: #c084fc; font-weight: 700; user-select: none; } /* Prompts */
+        .tok-out  { color: #64748b; }                   /* Output text */
 
         /* FAQ ACCORDION */
         .faq-grid {
@@ -1457,6 +1496,7 @@
             }
 
             /* Quickstart Tabs */
+            .window-dots { display: none; }
             .quickstart-box {
                 margin-bottom: 50px;
                 border-radius: 14px;
@@ -1605,7 +1645,7 @@
                     <div class="cmd-box">
                         <code>
                             <span class="prompt">$</span>
-                            <span id="dockerCmd">docker run -d -p 8379:8379 -p 8380:8380 ianshugarg/vortexmq:latest</span>
+                            <span id="dockerCmd"><span class="tok-cmd">docker</span> <span class="tok-fn">run</span> <span class="tok-flag">-d</span> <span class="tok-flag">-p</span> <span class="tok-num">8379:8379</span> <span class="tok-flag">-p</span> <span class="tok-num">8380:8380</span> <span class="tok-str">ianshugarg/vortexmq:latest</span></span>
                         </code>
                         <button class="btn-copy" onclick="copySnippet('dockerCmd', this)">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -1648,7 +1688,7 @@
 
                 <div class="bench-terminal">
                     <div>
-                        <span>$</span> go test -benchmem -bench=. ./benchmarks/...
+                        <span style="color: var(--accent-cyan); font-weight: 700;">$</span> <span class="tok-cmd">go</span> <span class="tok-fn">test</span> <span class="tok-flag">-benchmem</span> <span class="tok-flag">-bench=.</span> <span class="tok-str">./benchmarks/...</span>
                     </div>
                     <button class="btn-copy" onclick="navigator.clipboard.writeText('go test -benchmem -bench=. ./benchmarks/...'); this.innerText = 'Copied!'; setTimeout(() => this.innerText='Copy', 2000);">Copy</button>
                 </div>
@@ -1961,88 +2001,120 @@
 
                 <div class="quickstart-box">
                     <div class="code-tabs">
-                        <button class="tab-btn active" onclick="switchCodeTab('go', this)">Go (go-redis)</button>
-                        <button class="tab-btn" onclick="switchCodeTab('python', this)">Python (redis-py)</button>
-                        <button class="tab-btn" onclick="switchCodeTab('node', this)">Node.js (ioredis)</button>
-                        <button class="tab-btn" onclick="switchCodeTab('curl', this)">cURL / HTTP REST</button>
-                        <button class="tab-btn" onclick="switchCodeTab('cli', this)">VortexMQ CLI</button>
+                        <div class="window-dots">
+                            <span class="window-dot dot-red"></span>
+                            <span class="window-dot dot-yellow"></span>
+                            <span class="window-dot dot-green"></span>
+                        </div>
+                        <button class="tab-btn active" onclick="switchCodeTab('go', this)">
+                            <span>🐹</span> Go (go-redis)
+                        </button>
+                        <button class="tab-btn" onclick="switchCodeTab('python', this)">
+                            <span>🐍</span> Python (redis-py)
+                        </button>
+                        <button class="tab-btn" onclick="switchCodeTab('node', this)">
+                            <span>⚡</span> Node.js (ioredis)
+                        </button>
+                        <button class="tab-btn" onclick="switchCodeTab('curl', this)">
+                            <span>🌐</span> cURL / HTTP REST
+                        </button>
+                        <button class="tab-btn" onclick="switchCodeTab('cli', this)">
+                            <span>⌨️</span> VortexMQ CLI
+                        </button>
                     </div>
 
                     <div class="tab-pane active" id="tab-go">
-                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-go', this)">Copy</button>
-                        <pre id="code-go"><code>package main
+                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-go', this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <pre id="code-go"><code><span class="tok-kw">package</span> <span class="tok-var">main</span>
 
-import (
-    "context"
-    "fmt"
-    "github.com/redis/go-redis/v9"
+<span class="tok-kw">import</span> (
+    <span class="tok-str">"context"</span>
+    <span class="tok-str">"fmt"</span>
+    <span class="tok-str">"github.com/redis/go-redis/v9"</span>
 )
 
-func main() {
-    ctx := context.Background()
-    rdb := redis.NewClient(&redis.Options{Addr: "localhost:8379"})
+<span class="tok-kw">func</span> <span class="tok-fn">main</span>() {
+    <span class="tok-var">ctx</span> <span class="tok-op">:=</span> <span class="tok-type">context</span>.<span class="tok-fn">Background</span>()
+    <span class="tok-var">rdb</span> <span class="tok-op">:=</span> <span class="tok-type">redis</span>.<span class="tok-fn">NewClient</span>(&amp;<span class="tok-type">redis</span>.<span class="tok-type">Options</span>{<span class="tok-var">Addr</span>: <span class="tok-str">"localhost:8379"</span>})
 
-    // 1. Publish task to VortexMQ
-    rdb.LPush(ctx, "tasks:billing", `{"user_id": 9468, "invoice_usd": 150}`)
+    <span class="tok-com">// 1. Publish task to VortexMQ ring buffer</span>
+    <span class="tok-var">rdb</span>.<span class="tok-fn">LPush</span>(<span class="tok-var">ctx</span>, <span class="tok-str">"tasks:billing"</span>, <span class="tok-str">`{"user_id": 9468, "invoice_usd": 150}`</span>)
 
-    // 2. Consume task with blocking pop
-    res, _ := rdb.BRPop(ctx, 0, "tasks:billing").Result()
-    fmt.Println("Processed task:", res[1])
+    <span class="tok-com">// 2. Consume task with zero-latency blocking pop</span>
+    <span class="tok-var">res</span>, <span class="tok-var">_</span> <span class="tok-op">:=</span> <span class="tok-var">rdb</span>.<span class="tok-fn">BRPop</span>(<span class="tok-var">ctx</span>, <span class="tok-num">0</span>, <span class="tok-str">"tasks:billing"</span>).<span class="tok-fn">Result</span>()
+    <span class="tok-type">fmt</span>.<span class="tok-fn">Println</span>(<span class="tok-str">"Processed task:"</span>, <span class="tok-var">res</span>[<span class="tok-num">1</span>])
 }</code></pre>
                     </div>
 
                     <div class="tab-pane" id="tab-python">
-                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-python', this)">Copy</button>
-                        <pre id="code-python"><code>import redis
-import json
+                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-python', this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <pre id="code-python"><code><span class="tok-kw">import</span> <span class="tok-type">redis</span>
+<span class="tok-kw">import</span> <span class="tok-type">json</span>
 
-# Connect directly to VortexMQ port 8379
-r = redis.Redis(host='localhost', port=8379, decode_responses=True)
+<span class="tok-com"># Connect directly to VortexMQ port 8379</span>
+<span class="tok-var">r</span> <span class="tok-op">=</span> <span class="tok-type">redis</span>.<span class="tok-fn">Redis</span>(<span class="tok-var">host</span><span class="tok-op">=</span><span class="tok-str">'localhost'</span>, <span class="tok-var">port</span><span class="tok-op">=</span><span class="tok-num">8379</span>, <span class="tok-var">decode_responses</span><span class="tok-op">=</span><span class="tok-num">True</span>)
 
-# Publish asynchronous job
-r.lpush('tasks:analytics', json.dumps({'event': 'signup', 'user': 'gopher_42'}))
+<span class="tok-com"># 1. Publish asynchronous task to topic</span>
+<span class="tok-var">r</span>.<span class="tok-fn">lpush</span>(<span class="tok-str">'tasks:analytics'</span>, <span class="tok-type">json</span>.<span class="tok-fn">dumps</span>({<span class="tok-str">'event'</span>: <span class="tok-str">'signup'</span>, <span class="tok-str">'user'</span>: <span class="tok-str">'gopher_42'</span>}))
 
-# Blocking worker consume
-_, payload = r.brpop('tasks:analytics')
-print(f"Consumed from VortexMQ: {payload}")</code></pre>
+<span class="tok-com"># 2. Worker blocking pop with sub-microsecond pickup</span>
+<span class="tok-var">_</span>, <span class="tok-var">payload</span> <span class="tok-op">=</span> <span class="tok-var">r</span>.<span class="tok-fn">brpop</span>(<span class="tok-str">'tasks:analytics'</span>)
+<span class="tok-fn">print</span>(<span class="tok-str">f"Consumed from VortexMQ: {<span class="tok-var">payload</span>}"</span>)</code></pre>
                     </div>
 
                     <div class="tab-pane" id="tab-node">
-                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-node', this)">Copy</button>
-                        <pre id="code-node"><code>import Redis from 'ioredis';
+                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-node', this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <pre id="code-node"><code><span class="tok-kw">import</span> <span class="tok-type">Redis</span> <span class="tok-kw">from</span> <span class="tok-str">'ioredis'</span>;
 
-const vmq = new Redis({ port: 8379, host: '127.0.0.1' });
+<span class="tok-kw">const</span> <span class="tok-var">vmq</span> <span class="tok-op">=</span> <span class="tok-kw">new</span> <span class="tok-fn">Redis</span>({ <span class="tok-var">port</span>: <span class="tok-num">8379</span>, <span class="tok-var">host</span>: <span class="tok-str">'127.0.0.1'</span> });
 
-// Produce message
-await vmq.lpush('tasks:notifications', JSON.stringify({ to: 'anshu@google.com', text: 'VortexMQ v1.0 Live' }));
+<span class="tok-com">// 1. Produce message to queue</span>
+<span class="tok-kw">await</span> <span class="tok-var">vmq</span>.<span class="tok-fn">lpush</span>(<span class="tok-str">'tasks:notifications'</span>, <span class="tok-type">JSON</span>.<span class="tok-fn">stringify</span>({ <span class="tok-var">to</span>: <span class="tok-str">'anshu@google.com'</span>, <span class="tok-var">text</span>: <span class="tok-str">'VortexMQ v1.0 Live'</span> }));
 
-// Consume message with zero latency
-const [, task] = await vmq.brpop('tasks:notifications', 0);
-console.log('Worker received:', JSON.parse(task));</code></pre>
+<span class="tok-com">// 2. Consume message with sub-millisecond response</span>
+<span class="tok-kw">const</span> [, <span class="tok-var">task</span>] <span class="tok-op">=</span> <span class="tok-kw">await</span> <span class="tok-var">vmq</span>.<span class="tok-fn">brpop</span>(<span class="tok-str">'tasks:notifications'</span>, <span class="tok-num">0</span>);
+<span class="tok-type">console</span>.<span class="tok-fn">log</span>(<span class="tok-str">'Worker received:'</span>, <span class="tok-type">JSON</span>.<span class="tok-fn">parse</span>(<span class="tok-var">task</span>));</code></pre>
                     </div>
 
                     <div class="tab-pane" id="tab-curl">
-                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-curl', this)">Copy</button>
-                        <pre id="code-curl"><code># 1. Publish directly over HTTP REST on port 8380
-curl -X POST http://localhost:8380/api/publish \
-  -H "Content-Type: application/json" \
-  -d '{"topic": "orders", "payload": "{\"order_id\": \"vmq_1001\", \"usd\": 49.99}"}'
+                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-curl', this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <pre id="code-curl"><code><span class="tok-com"># 1. Publish directly over HTTP REST on port 8380</span>
+<span class="tok-cmd">curl</span> <span class="tok-flag">-X</span> <span class="tok-kw">POST</span> <span class="tok-str">http://localhost:8380/api/publish</span> \
+  <span class="tok-flag">-H</span> <span class="tok-str">"Content-Type: application/json"</span> \
+  <span class="tok-flag">-d</span> <span class="tok-str">'{"topic": "orders", "payload": "{\"order_id\": \"vmq_1001\", \"usd\": 49.99}"}'</span>
 
-# 2. Check broker metrics & lag
-curl http://localhost:8380/api/metrics</code></pre>
+<span class="tok-com"># 2. Check broker telemetry &amp; live consumer lag</span>
+<span class="tok-cmd">curl</span> <span class="tok-str">http://localhost:8380/api/metrics</span></code></pre>
                     </div>
 
                     <div class="tab-pane" id="tab-cli">
-                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-cli', this)">Copy</button>
-                        <pre id="code-cli"><code># Build and run native CLI
-./bin/vortexmq-cli -port 8379
+                        <button class="btn-copy" style="position: absolute; top: 16px; right: 16px;" onclick="copyCodeContent('code-cli', this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <pre id="code-cli"><code><span class="tok-com"># Build and run native CLI tool</span>
+<span class="tok-cmd">./bin/vortexmq-cli</span> <span class="tok-flag">-port</span> <span class="tok-num">8379</span>
 
-vortexmq:8379> LPUSH critical:tasks "hello from cli"
-(integer) 1
-vortexmq:8379> RPOP critical:tasks
-"hello from cli"
-vortexmq:8379> VMQ.STATS
-Active Topics: 1 | Memory: 12.4 MB | Uptime: 2h</code></pre>
+<span class="tok-prompt">vortexmq:8379&gt;</span> <span class="tok-cmd">LPUSH</span> <span class="tok-var">critical:tasks</span> <span class="tok-str">"hello from cli"</span>
+<span class="tok-out">(integer) 1</span>
+
+<span class="tok-prompt">vortexmq:8379&gt;</span> <span class="tok-cmd">RPOP</span> <span class="tok-var">critical:tasks</span>
+<span class="tok-str">"hello from cli"</span>
+
+<span class="tok-prompt">vortexmq:8379&gt;</span> <span class="tok-cmd">VMQ.STATS</span>
+<span class="tok-type">Active Topics:</span> <span class="tok-num">1</span> <span class="tok-out">|</span> <span class="tok-type">Memory:</span> <span class="tok-num">12.4 MB</span> <span class="tok-out">|</span> <span class="tok-type">Uptime:</span> <span class="tok-num">2h</span></code></pre>
                     </div>
                 </div>
             </section>
