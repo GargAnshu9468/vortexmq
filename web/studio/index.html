@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VortexMQ Quantum Studio — Next-Gen High-Throughput Message Broker</title>
+    <meta name="description" content="Immersive real-time telemetry, queue topology, and dead-letter recovery studio for VortexMQ.">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+    <!-- Background Ambient Glow & Mesh -->
+    <div class="quantum-mesh"></div>
+    <div class="ambient-glow cyan"></div>
+    <div class="ambient-glow purple"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation Header -->
+        <header class="studio-header">
+            <div class="brand-section">
+                <div class="brand-logo">
+                    <div class="quantum-orb"></div>
+                    <div class="orb-ring"></div>
+                </div>
+                <div class="brand-text">
+                    <h1>VORTEX<span>MQ</span></h1>
+                    <span class="badge-version">v1.0.0-PROD</span>
+                </div>
+            </div>
+
+            <!-- Live Status & Ticker -->
+            <div class="cluster-status-bar">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="conn-status">CONNECTED (PORT 8379)</span>
+                </div>
+                <div class="telemetry-pill">
+                    <span class="pill-label">UPTIME</span>
+                    <span class="pill-value" id="stat-uptime">0s</span>
+                </div>
+                <div class="telemetry-pill">
+                    <span class="pill-label">TOPICS</span>
+                    <span class="pill-value" id="stat-topics">0</span>
+                </div>
+                <div class="telemetry-pill">
+                    <span class="pill-label">PUBLISHED</span>
+                    <span class="pill-value neon-cyan" id="stat-published">0</span>
+                </div>
+                <div class="telemetry-pill">
+                    <span class="pill-label">CONSUMED</span>
+                    <span class="pill-value neon-green" id="stat-consumed">0</span>
+                </div>
+                <div class="telemetry-pill dlq-alert">
+                    <span class="pill-label">DLQ</span>
+                    <span class="pill-value neon-red" id="stat-dlq">0</span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-theme" id="theme-toggle" title="Toggle Light/Dark Theme">
+                    <span class="theme-icon" id="theme-icon">☀️</span>
+                </button>
+                <button class="btn-primary" id="btn-open-publisher">
+                    <span class="btn-icon">⚡</span> Publish Event
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="studio-nav">
+            <button class="nav-tab active" data-tab="overview">
+                <span class="tab-icon">📊</span> Pipeline Topology
+            </button>
+            <button class="nav-tab" data-tab="topics">
+                <span class="tab-icon">📑</span> Topics & Queues
+            </button>
+            <button class="nav-tab" data-tab="dlq">
+                <span class="tab-icon">🛡️</span> Dead Letter Recovery
+                <span class="nav-badge" id="dlq-badge">0</span>
+            </button>
+            <button class="nav-tab" data-tab="playground">
+                <span class="tab-icon">🚀</span> Message Playground
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="studio-main">
+            <!-- TAB 1: OVERVIEW & TOPOLOGY -->
+            <section class="tab-content active" id="tab-overview">
+                <!-- Live Pipeline Visualizer -->
+                <div class="glass-card visualizer-card">
+                    <div class="card-header">
+                        <h2>Quantum Pipeline Flow Topology</h2>
+                        <span class="live-pulse">LIVE REAC-EVENT REACTOR (5M+ MSGS/SEC)</span>
+                    </div>
+                    <div class="pipeline-flow-container">
+                        <div class="pipeline-stage stage-producers">
+                            <div class="stage-label">PRODUCERS</div>
+                            <div class="node-box" id="node-producers">
+                                <span class="node-icon">📤</span>
+                                <span class="node-title">Redis / REST / CLI</span>
+                                <span class="node-sub" id="flow-pub-rate">0 msgs/s</span>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-connector">
+                            <div class="stream-line">
+                                <div class="stream-particle p1"></div>
+                                <div class="stream-particle p2"></div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage stage-engine">
+                            <div class="stage-label">VORTEX CORE (RING BUFFER & WAL)</div>
+                            <div class="node-box core-box" id="node-engine">
+                                <div class="core-pulse-orb"></div>
+                                <span class="node-title">256-Shard Memory Ring</span>
+                                <span class="node-sub" id="flow-ring-capacity">Zero-Allocation Active</span>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-connector">
+                            <div class="stream-line">
+                                <div class="stream-particle p3"></div>
+                                <div class="stream-particle p4"></div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage stage-consumers">
+                            <div class="stage-label">CONSUMERS & DLQ</div>
+                            <div class="node-box consumer-node" id="node-consumers">
+                                <span class="node-icon">📥</span>
+                                <span class="node-title">Workers (ACKed)</span>
+                                <span class="node-sub" id="flow-sub-rate">0 msgs/s</span>
+                            </div>
+                            <div class="node-box dlq-node" id="node-dlq">
+                                <span class="node-icon">⚠️</span>
+                                <span class="node-title">Dead Letter Queue</span>
+                                <span class="node-sub" id="flow-dlq-count">0 Failed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cluster Quick Telemetry Grid -->
+                <div class="metrics-grid">
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">TOTAL PUBLISHED</div>
+                        <div class="metric-big-value neon-cyan" id="metric-total-pub">0</div>
+                        <div class="metric-meta">Sub-microsecond Pipelined Ingestion</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">TOTAL CONSUMED</div>
+                        <div class="metric-big-value neon-green" id="metric-total-sub">0</div>
+                        <div class="metric-meta">At-least-once Guaranteed Delivery</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">TOTAL ACKNOWLEDGED</div>
+                        <div class="metric-big-value neon-purple" id="metric-total-acked">0</div>
+                        <div class="metric-meta">Zero Worker Memory Retention</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">DEAD LETTERED (DLQ)</div>
+                        <div class="metric-big-value neon-red" id="metric-total-dlq">0</div>
+                        <div class="metric-meta">Isolated for Instant 1-Click Replay</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: TOPICS & QUEUES -->
+            <section class="tab-content" id="tab-topics">
+                <div class="section-toolbar">
+                    <h2>Active Topics & Queue Rings</h2>
+                    <button class="btn-secondary" id="btn-refresh-topics">🔄 Refresh</button>
+                </div>
+                <div class="topics-grid" id="topics-container">
+                    <!-- Dynamic Topic Cards injected by JS -->
+                    <div class="empty-state">No active topics found. Publish an event to start!</div>
+                </div>
+            </section>
+
+            <!-- TAB 3: DEAD LETTER QUEUE (DLQ) -->
+            <section class="tab-content" id="tab-dlq">
+                <div class="section-toolbar">
+                    <div>
+                        <h2>Dead Letter Recovery Center</h2>
+                        <p class="section-subtitle">Inspect poisoned tasks, audit failure causes, and replay messages with 1-click.</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn-danger" id="btn-purge-dlq">🗑️ Purge All DLQ</button>
+                        <button class="btn-secondary" id="btn-refresh-dlq">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <div class="glass-card dlq-card">
+                    <div class="table-responsive">
+                        <table class="dlq-table">
+                            <thead>
+                                <tr>
+                                    <th>Message ID</th>
+                                    <th>Topic</th>
+                                    <th>Failure Cause</th>
+                                    <th>Attempts</th>
+                                    <th>Failed At</th>
+                                    <th>Payload Preview</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dlq-table-body">
+                                <tr>
+                                    <td colspan="7" class="empty-table-cell">No dead-lettered messages! All tasks running healthy.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: MESSAGE PLAYGROUND -->
+            <section class="tab-content" id="tab-playground">
+                <div class="glass-card playground-card">
+                    <h2>Direct Message Dispatcher</h2>
+                    <p class="section-subtitle">Test publishing JSON or binary events directly into VortexMQ topics.</p>
+
+                    <div class="playground-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pg-topic">Target Topic / Stream</label>
+                                <input type="text" id="pg-topic" placeholder="e.g. orders, notifications, analytics" value="events">
+                            </div>
+                            <div class="form-group">
+                                <label for="pg-delay">Delivery Delay (ms)</label>
+                                <input type="number" id="pg-delay" placeholder="0 = immediate" value="0">
+                            </div>
+                        </div>
+
+                        <div class="template-selector">
+                            <span class="template-label">Quick Templates:</span>
+                            <button class="btn-chip" data-tpl="order">Order Created</button>
+                            <button class="btn-chip" data-tpl="user">User Signup</button>
+                            <button class="btn-chip" data-tpl="ai">AI LLM Task</button>
+                            <button class="btn-chip" data-tpl="iot">IoT Telemetry</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pg-payload">Message Payload (JSON / Text)</label>
+                            <textarea id="pg-payload" rows="8" placeholder='{"event": "test", "data": 123}'></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn-primary btn-large" id="btn-dispatch">
+                                <span>🚀</span> Dispatch to VortexMQ
+                            </button>
+                            <div class="dispatch-result" id="dispatch-result"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="studio-footer">
+            <div class="footer-left">
+                <span>VORTEX MQ &bull; High-Throughput Distributed Message Engine</span>
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/GargAnshu9468/vortexmq" target="_blank" rel="noopener">GitHub</a>
+                <span>&bull;</span>
+                <span>Zero Erlang &bull; Zero JVM &bull; Pure Go</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

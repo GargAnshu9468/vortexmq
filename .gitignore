@@ -1,0 +1,32 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test and coverage artifacts
+*.test
+*.out
+coverage.html
+profile.pprof
+
+# Data and logs
+data/
+*.wal
+*.log
+dump.rdb
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# OS and IDE files
+.DS_Store
+.idea/
+.vscode/
+*.swp
