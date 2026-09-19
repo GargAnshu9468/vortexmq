@@ -1279,22 +1279,25 @@
 
             /* Command Box */
             .cmd-box {
-                flex-direction: column;
-                align-items: stretch;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
                 padding: 12px 14px;
-                gap: 10px;
+                gap: 8px;
             }
             .cmd-box code {
-                font-size: 0.76rem;
-                padding-bottom: 4px;
+                font-size: 0.74rem;
                 overflow-x: auto;
+                white-space: nowrap;
+                flex: 1;
+                min-width: 0;
             }
             .btn-copy {
                 margin-left: 0;
-                width: 100%;
-                justify-content: center;
-                padding: 8px 12px;
-                font-size: 0.78rem;
+                width: auto !important;
+                padding: 4px 10px;
+                font-size: 0.72rem;
+                flex-shrink: 0;
             }
 
             /* Section Headers */
@@ -1335,13 +1338,23 @@
             }
 
             .bench-terminal {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-                padding: 14px;
-                font-size: 0.76rem;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 12px 14px;
+                font-size: 0.75rem;
             }
-            .bench-terminal .btn-copy { width: 100%; }
+            .bench-terminal div {
+                flex: 1;
+                min-width: 0;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .bench-terminal .btn-copy {
+                width: auto !important;
+                flex-shrink: 0;
+            }
 
             /* Architecture Features: Compact Mobile Cards */
             .features-grid {
@@ -1525,7 +1538,7 @@
                     Download
                 </a>
                 <!-- Mobile Hamburger Button -->
-                <button type="button" class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
+                <button type="button" class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleMobileMenu(event)">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -2160,12 +2173,13 @@ Active Topics: 1 | Memory: 12.4 MB | Uptime: 2h</code></pre>
 
     <!-- Interactive In-Browser Sandbox Script -->
     <script>
-        // Mobile Hamburger Menu Drawer Toggle
-        function toggleMobileMenu() {
+        function toggleMobileMenu(e) {
+            if (e) e.stopPropagation();
             const btn = document.getElementById('hamburgerBtn');
             const drawer = document.getElementById('mobileDrawer');
-            if (btn) btn.classList.toggle('open');
-            if (drawer) drawer.classList.toggle('open');
+            if (!btn || !drawer) return;
+            btn.classList.toggle('open');
+            drawer.classList.toggle('open');
         }
 
         function closeMobileMenu() {
@@ -2175,23 +2189,14 @@ Active Topics: 1 | Memory: 12.4 MB | Uptime: 2h</code></pre>
             if (drawer) drawer.classList.remove('open');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', (e) => {
+            const drawer = document.getElementById('mobileDrawer');
             const btn = document.getElementById('hamburgerBtn');
-            if (btn) {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleMobileMenu();
-                });
-            }
-            document.addEventListener('click', (e) => {
-                const drawer = document.getElementById('mobileDrawer');
-                const btn = document.getElementById('hamburgerBtn');
-                if (drawer && drawer.classList.contains('open')) {
-                    if (!drawer.contains(e.target) && !btn.contains(e.target)) {
-                        closeMobileMenu();
-                    }
+            if (drawer && drawer.classList.contains('open')) {
+                if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+                    closeMobileMenu();
                 }
-            });
+            }
         });
 
         // Snippet copy helper
