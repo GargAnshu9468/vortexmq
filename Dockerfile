@@ -13,8 +13,8 @@ RUN go mod download || true
 COPY . .
 
 # Build statically linked binaries
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-w -s -extldflags '-static'" -o /vortexmq cmd/vortexmq/main.go
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-w -s -extldflags '-static'" -o /vortexmq-cli cmd/vortexmq-cli/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags="-w -s -extldflags '-static'" -o /vortexmq cmd/vortexmq/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags="-w -s -extldflags '-static'" -o /vortexmq-cli cmd/vortexmq-cli/main.go
 
 # Scratch runtime stage
 FROM scratch
