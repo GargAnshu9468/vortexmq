@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://garganshu9468.github.io/vortexmq/sitemap.xml
