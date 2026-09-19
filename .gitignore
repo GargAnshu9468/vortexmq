@@ -30,3 +30,6 @@ dump.rdb
 .idea/
 .vscode/
 *.swp
+
+# Promotional drafts and articles
+docs/articles/
