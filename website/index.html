@@ -175,18 +175,67 @@
             z-index: 1;
         }
 
-        /* Navigation */
-        header {
-            padding: 22px 0;
+        /* SUPPRESS SCROLLBAR TRACKS EVERYWHERE */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 243, 255, 0.2) transparent;
+        }
+        .cmd-box code,
+        .bench-terminal,
+        .code-tabs,
+        .tab-pane pre,
+        .stats-grid {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        .cmd-box code::-webkit-scrollbar,
+        .bench-terminal::-webkit-scrollbar,
+        .code-tabs::-webkit-scrollbar,
+        .tab-pane pre::-webkit-scrollbar,
+        .stats-grid::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* Sleek 3px scrollbars for tables and logs */
+        .table-responsive::-webkit-scrollbar,
+        .sandbox-log::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-track,
+        .sandbox-log::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb,
+        .sandbox-log::-webkit-scrollbar-thumb {
+            background: rgba(0, 243, 255, 0.35);
+            border-radius: 4px;
+        }
+
+        /* Site-Wide Full-Width Sticky Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(7, 9, 14, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(7, 9, 14, 0.85);
         }
 
         .logo {
@@ -261,6 +310,105 @@
             transform: translateY(-2px);
             filter: brightness(1.1);
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Hamburger Button */
+        .hamburger-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        .hamburger-btn:hover {
+            background: rgba(0, 243, 255, 0.15);
+            border-color: var(--accent-cyan);
+        }
+        .hamburger-btn span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .hamburger-btn.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+            background-color: var(--accent-cyan);
+        }
+        .hamburger-btn.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger-btn.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+            background-color: var(--accent-cyan);
+        }
+
+        /* Mobile Navigation Drawer */
+        .mobile-drawer {
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            background: rgba(7, 9, 14, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-color);
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+        .mobile-drawer.open {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 520px;
+            padding: 16px 20px 24px;
+        }
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .mobile-nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.98rem;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mobile-nav a:hover, .mobile-nav a:active {
+            color: var(--accent-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--border-color);
+        }
+        .mobile-drawer-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .mobile-drawer-actions a {
+            width: 100%;
+            justify-content: center;
+            padding: 12px;
+            font-size: 0.9rem;
         }
 
         /* Section Headings */
@@ -1046,6 +1194,8 @@
         /* TABLET & LAPTOP (<= 900px) */
         @media (max-width: 900px) {
             .nav-links { display: none; }
+            .hamburger-btn { display: flex; }
+            .header-container { padding: 14px 20px; }
             .section-padding { padding: 60px 0; }
             .features-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
             .pipeline-visual { grid-template-columns: 1fr; }
@@ -1058,26 +1208,22 @@
             .container { padding: 0 16px; }
 
             /* Header */
-            header {
-                padding: 14px 0;
+            .header-container {
+                padding: 12px 16px;
             }
             .logo { font-size: 1.25rem; }
             .logo-badge { font-size: 0.6rem; padding: 1px 6px; }
-            .btn-star {
-                padding: 6px 10px;
-                font-size: 0.76rem;
-                gap: 4px;
-                white-space: nowrap;
+            .nav-actions .btn-star, 
+            .nav-actions .btn-primary {
+                display: none; /* Cleanly moved inside hamburger drawer */
             }
-            .btn-primary {
-                padding: 6px 12px;
-                font-size: 0.76rem;
-                white-space: nowrap;
+            .hamburger-btn {
+                display: flex;
             }
 
             /* Hero */
             .hero {
-                padding: 40px 0 30px;
+                padding: 36px 0 28px;
             }
             .pill-badge {
                 font-size: 0.68rem;
@@ -1332,9 +1478,9 @@
     <div class="ambient-glow"></div>
     <div class="ambient-glow-secondary"></div>
 
-    <div class="container">
-        <!-- HEADER -->
-        <header>
+    <!-- SITE-WIDE FULL-WIDTH HEADER -->
+    <header class="site-header">
+        <div class="header-container">
             <a href="#" class="logo">
                 VORTEX<span>MQ</span>
                 <span class="logo-badge">v1.0.0</span>
@@ -1355,9 +1501,38 @@
                 <a href="https://github.com/GargAnshu9468/vortexmq/releases" class="btn-primary" target="_blank" rel="noopener">
                     Download
                 </a>
+                <!-- Mobile Hamburger Button -->
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
-        </header>
+        </div>
 
+        <!-- Mobile Drawer Menu -->
+        <div class="mobile-drawer" id="mobileDrawer">
+            <nav class="mobile-nav">
+                <a href="#benchmarks" onclick="closeMobileMenu()">⚡ Benchmarks</a>
+                <a href="#architecture" onclick="closeMobileMenu()">🛠️ Architecture</a>
+                <a href="#sandbox" onclick="closeMobileMenu()">🎮 Live Sandbox</a>
+                <a href="#comparison" onclick="closeMobileMenu()">🥊 Broker Comparison</a>
+                <a href="#quickstart" onclick="closeMobileMenu()">💻 Quickstart</a>
+                <a href="#faq" onclick="closeMobileMenu()">❓ FAQ</a>
+                <a href="https://github.com/GargAnshu9468/vortexmq/wiki" target="_blank" rel="noopener" onclick="closeMobileMenu()">📖 Technical Wiki</a>
+            </nav>
+            <div class="mobile-drawer-actions">
+                <a href="https://github.com/GargAnshu9468/vortexmq" class="btn-hero-secondary" target="_blank" rel="noopener">
+                    ⭐ Star on GitHub
+                </a>
+                <a href="https://github.com/GargAnshu9468/vortexmq/releases" class="btn-hero-primary" target="_blank" rel="noopener">
+                    📦 Download v1.0.0
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
         <main>
             <!-- HERO SECTION -->
             <section class="hero">
@@ -1962,6 +2137,21 @@ Active Topics: 1 | Memory: 12.4 MB | Uptime: 2h</code></pre>
 
     <!-- Interactive In-Browser Sandbox Script -->
     <script>
+        // Mobile Hamburger Menu Drawer Toggle
+        function toggleMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const drawer = document.getElementById('mobileDrawer');
+            if (btn) btn.classList.toggle('open');
+            if (drawer) drawer.classList.toggle('open');
+        }
+
+        function closeMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const drawer = document.getElementById('mobileDrawer');
+            if (btn) btn.classList.remove('open');
+            if (drawer) drawer.classList.remove('open');
+        }
+
         // Snippet copy helper
         function copySnippet(elementId, btn) {
             const text = document.getElementById(elementId).innerText;
