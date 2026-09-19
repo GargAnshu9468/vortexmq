@@ -11,6 +11,10 @@
     <meta name="theme-color" content="#07090e">
     <link rel="canonical" href="https://garganshu9468.github.io/vortexmq/">
 
+    <!-- Favicon: Inline Vector SVG + Fallback ICO -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2307090e'/%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%2300f3ff' stroke-width='2'/%3E%3Cpolygon points='16,8 23,16 16,24 9,16' fill='%2300f3ff'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%238a2be2'/%3E%3C/svg%3E">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://garganshu9468.github.io/vortexmq/">
@@ -606,7 +610,10 @@
             border-color: var(--accent-cyan);
         }
 
-        /* Benchmarks Section */
+        /* Sections & Anchors */
+        section[id] {
+            scroll-margin-top: 85px;
+        }
         .section-padding { padding: 90px 0; }
 
         .stats-grid {
@@ -1163,7 +1170,7 @@
         /* Footer */
         footer {
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 60px 0 40px;
+            padding: 60px 0 60px;
         }
 
         .footer-grid {
@@ -1498,7 +1505,10 @@
             }
 
             /* Footer */
-            footer { padding: 40px 0 30px; }
+            footer {
+                padding: 40px 0 100px;
+                padding-bottom: max(100px, env(safe-area-inset-bottom, 100px));
+            }
             .footer-grid { grid-template-columns: 1fr; gap: 28px; }
             .footer-bottom {
                 flex-direction: column;
