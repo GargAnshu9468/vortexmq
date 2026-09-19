@@ -1034,13 +1034,297 @@
             gap: 12px;
         }
 
+        .mobile-swipe-hint {
+            display: none;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            margin-bottom: 12px;
+        }
+
+        /* TABLET & LAPTOP (<= 900px) */
         @media (max-width: 900px) {
-            h1 { font-size: 2.8rem; }
-            .section-header h2 { font-size: 2.1rem; }
             .nav-links { display: none; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .sandbox-section { padding: 24px; }
-            .stat-num { font-size: 2.6rem; }
+            .section-padding { padding: 60px 0; }
+            .features-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+            .pipeline-visual { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+            .mobile-swipe-hint { display: block; }
+        }
+
+        /* MOBILE PHONES (<= 600px - iPhone, Pixel, Samsung Galaxy) */
+        @media (max-width: 600px) {
+            .container { padding: 0 16px; }
+
+            /* Header */
+            header {
+                padding: 14px 0;
+            }
+            .logo { font-size: 1.25rem; }
+            .logo-badge { font-size: 0.6rem; padding: 1px 6px; }
+            .btn-star {
+                padding: 6px 10px;
+                font-size: 0.76rem;
+                gap: 4px;
+                white-space: nowrap;
+            }
+            .btn-primary {
+                padding: 6px 12px;
+                font-size: 0.76rem;
+                white-space: nowrap;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 40px 0 30px;
+            }
+            .pill-badge {
+                font-size: 0.68rem;
+                padding: 4px 12px;
+                letter-spacing: 0.4px;
+                margin-bottom: 16px;
+            }
+            h1 {
+                font-size: 2.15rem;
+                line-height: 1.15;
+                letter-spacing: -1px;
+                margin-bottom: 16px;
+            }
+            .hero p {
+                font-size: 0.98rem;
+                line-height: 1.6;
+                margin-bottom: 24px;
+                padding: 0 4px;
+            }
+            .hero-actions {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                margin-bottom: 28px;
+            }
+            .btn-hero-primary, .btn-hero-secondary {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+                font-size: 0.92rem;
+            }
+
+            /* Command Box */
+            .cmd-box {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .cmd-box code {
+                font-size: 0.76rem;
+                padding-bottom: 4px;
+                overflow-x: auto;
+            }
+            .btn-copy {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.78rem;
+            }
+
+            /* Section Headers */
+            .section-header { margin-bottom: 30px; }
+            .section-header h2 {
+                font-size: 1.85rem;
+                letter-spacing: -0.5px;
+                margin-bottom: 10px;
+            }
+            .section-header p {
+                font-size: 0.92rem;
+                line-height: 1.55;
+            }
+            .section-padding { padding: 50px 0; }
+
+            /* Benchmarks: Gorgeous 2x2 Grid on Mobile */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .stat-card {
+                padding: 20px 10px;
+                border-radius: 14px;
+            }
+            .stat-num {
+                font-size: 1.95rem;
+                margin-bottom: 4px;
+            }
+            .stat-title {
+                font-size: 0.8rem;
+                margin-bottom: 4px;
+                line-height: 1.3;
+            }
+            .stat-sub {
+                font-size: 0.68rem;
+                line-height: 1.3;
+            }
+
+            .bench-terminal {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 14px;
+                font-size: 0.76rem;
+            }
+            .bench-terminal .btn-copy { width: 100%; }
+
+            /* Architecture Features: Compact Mobile Cards */
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .feature-card {
+                padding: 22px 18px;
+                border-radius: 14px;
+            }
+            .feature-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.3rem;
+            }
+            .feature-card h3 {
+                font-size: 1.18rem;
+                margin-bottom: 8px;
+            }
+            .feature-card p {
+                font-size: 0.88rem;
+                line-height: 1.55;
+                margin-bottom: 14px;
+            }
+            .feature-metric {
+                font-size: 0.76rem;
+                padding-top: 10px;
+            }
+
+            /* Live Sandbox Mobile Layout */
+            .sandbox-section {
+                padding: 18px 14px;
+                border-radius: 16px;
+                margin-bottom: 50px;
+            }
+            .sandbox-topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                margin-bottom: 18px;
+                padding-bottom: 14px;
+            }
+            .sandbox-status {
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+            }
+            .sandbox-controls {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .sb-btn {
+                padding: 8px 6px;
+                font-size: 0.74rem;
+                justify-content: center;
+                white-space: nowrap;
+            }
+            .ring-slots {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .ring-slot {
+                height: 38px;
+                font-size: 0.68rem;
+            }
+            .pipeline-box {
+                padding: 14px;
+            }
+            .sandbox-log {
+                height: 120px;
+                font-size: 0.74rem;
+                padding: 10px 12px;
+            }
+
+            /* Comparison Table Mobile Sticky Column */
+            .table-responsive {
+                margin-bottom: 50px;
+                border-radius: 14px;
+            }
+            .comparison-table th, .comparison-table td {
+                padding: 10px 12px;
+                font-size: 0.78rem;
+                min-width: 105px;
+            }
+            .comparison-table th:first-child,
+            .comparison-table td:first-child {
+                position: sticky;
+                left: 0;
+                background: #0a0e1a;
+                z-index: 5;
+                min-width: 120px;
+                box-shadow: 3px 0 8px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Quickstart Tabs */
+            .quickstart-box {
+                margin-bottom: 50px;
+                border-radius: 14px;
+            }
+            .tab-btn {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .tab-pane {
+                padding: 16px 14px;
+            }
+            .tab-pane pre {
+                font-size: 0.75rem;
+            }
+
+            /* FAQ */
+            .faq-grid { margin-bottom: 50px; gap: 10px; }
+            .faq-question {
+                padding: 16px 18px;
+                font-size: 0.95rem;
+            }
+            .faq-chevron {
+                width: 18px;
+                height: 18px;
+            }
+            .faq-answer {
+                font-size: 0.86rem;
+                padding: 0 18px;
+            }
+            .faq-item.open .faq-answer {
+                padding: 0 18px 18px;
+            }
+
+            /* CTA Section */
+            .cta-section {
+                padding: 34px 18px;
+                border-radius: 18px;
+                margin-bottom: 50px;
+            }
+            .cta-section h2 {
+                font-size: 1.85rem;
+            }
+            .cta-section p {
+                font-size: 0.94rem;
+                margin-bottom: 24px;
+            }
+
+            /* Footer */
+            footer { padding: 40px 0 30px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -1355,7 +1639,7 @@
                     <h2>How VortexMQ Compares to Alternatives</h2>
                     <p>An objective, technical comparison against RabbitMQ, Apache Kafka, Redis Streams, and NATS JetStream.</p>
                 </div>
-
+                <div class="mobile-swipe-hint">👉 Swipe table horizontally to compare all brokers</div>
                 <div class="table-responsive">
                     <table class="comparison-table">
                         <thead>
