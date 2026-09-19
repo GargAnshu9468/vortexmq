@@ -66,10 +66,18 @@ func (r *Reader) ReadCommand() (*Command, error) {
 		}, nil
 	}
 
+const (
+	maxBulkLength  = 64 * 1024 * 1024 // 64 MB maximum bulk payload
+	maxCommandArgs = 65536           // 64K maximum command arguments
+)
+
 	// Array command (*<count>\r\n)
 	count, err := strconv.Atoi(string(line[1:]))
 	if err != nil || count <= 0 {
 		return nil, fmt.Errorf("invalid array length: %w", err)
+	}
+	if count > maxCommandArgs {
+		return nil, fmt.Errorf("array length %d exceeds maximum allowed %d", count, maxCommandArgs)
 	}
 
 	args := make([][]byte, 0, count)
@@ -86,6 +94,9 @@ func (r *Reader) ReadCommand() (*Command, error) {
 		bulkLen, err := strconv.Atoi(string(argLine[1:]))
 		if err != nil {
 			return nil, fmt.Errorf("invalid bulk string length: %w", err)
+		}
+		if bulkLen > maxBulkLength {
+			return nil, fmt.Errorf("bulk string length %d exceeds maximum %d", bulkLen, maxBulkLength)
 		}
 
 		if bulkLen < 0 {

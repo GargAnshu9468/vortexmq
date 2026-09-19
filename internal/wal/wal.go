@@ -214,9 +214,9 @@ func Replay(dir string, onPublish func(msg *queue.Message)) (int, error) {
 			if op == OpPublish {
 				var msg queue.Message
 				if err := json.Unmarshal(recordData, &msg); err == nil {
+					count++
 					if onPublish != nil {
 						onPublish(&msg)
-						count++
 					}
 				}
 			}
