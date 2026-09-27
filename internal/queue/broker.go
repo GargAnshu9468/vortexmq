@@ -32,6 +32,8 @@ type BrokerStats struct {
 type Broker struct {
 	mu          sync.RWMutex
 	topics      map[string]*Topic
+	channels    map[string]map[chan []byte]struct{}
+	chanMu      sync.RWMutex
 	wal         BrokerWAL
 	startTime   time.Time
 	closed      bool
@@ -55,6 +57,7 @@ func NewBroker(wal BrokerWAL) *Broker {
 	}
 	b := &Broker{
 		topics:      make(map[string]*Topic),
+		channels:    make(map[string]map[chan []byte]struct{}),
 		wal:         wal,
 		startTime:   time.Now(),
 		sweepTicker: time.NewTicker(500 * time.Millisecond),
@@ -165,6 +168,72 @@ func (b *Broker) PublishDelayed(topicName string, payload []byte, delay time.Dur
 	t.PublishDelayed(msg, delay)
 	atomic.AddUint64(&b.totalPublished, 1)
 	return msg, nil
+}
+
+// PublishBatch appends multiple payloads in a single pipeline transaction.
+func (b *Broker) PublishBatch(topicName string, payloads [][]byte) (int, error) {
+	if len(payloads) == 0 {
+		return 0, nil
+	}
+	t := b.GetOrCreateTopic(topicName)
+	count := 0
+	for _, payload := range payloads {
+		msg := NewMessage(topicName, payload)
+		if b.wal != nil {
+			_ = b.wal.WritePublish(msg)
+		}
+		if t.Publish(msg) {
+			count++
+		}
+	}
+	atomic.AddUint64(&b.totalPublished, uint64(count))
+	return count, nil
+}
+
+// Broadcast delivers an ephemeral byte payload to all active channel subscribers without queue overhead (NATS style).
+func (b *Broker) Broadcast(channel string, payload []byte) int {
+	b.chanMu.RLock()
+	subs, exists := b.channels[channel]
+	if !exists || len(subs) == 0 {
+		b.chanMu.RUnlock()
+		return 0
+	}
+	count := 0
+	for ch := range subs {
+		select {
+		case ch <- payload:
+			count++
+		default:
+			// Non-blocking drop if consumer buffer is full
+		}
+	}
+	b.chanMu.RUnlock()
+	return count
+}
+
+// SubscribeChannel attaches a client listener to an ephemeral pub/sub stream.
+func (b *Broker) SubscribeChannel(channel string) chan []byte {
+	b.chanMu.Lock()
+	defer b.chanMu.Unlock()
+	if b.channels[channel] == nil {
+		b.channels[channel] = make(map[chan []byte]struct{})
+	}
+	ch := make(chan []byte, 1024)
+	b.channels[channel][ch] = struct{}{}
+	return ch
+}
+
+// UnsubscribeChannel detaches a listener.
+func (b *Broker) UnsubscribeChannel(channel string, ch chan []byte) {
+	b.chanMu.Lock()
+	defer b.chanMu.Unlock()
+	if subs, exists := b.channels[channel]; exists {
+		delete(subs, ch)
+		close(ch)
+		if len(subs) == 0 {
+			delete(b.channels, channel)
+		}
+	}
 }
 
 // Consume fetches the next message from the specified topic.

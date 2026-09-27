@@ -428,6 +428,28 @@ func (s *Server) handleConnection(conn net.Conn) {
 				_ = writer.WriteError("message not found in dead letter queue")
 			}
 
+		case "VMQ.PUBLISH_BATCH":
+			if len(cmd.Args) < 2 {
+				_ = writer.WriteError("usage: VMQ.PUBLISH_BATCH <topic> <payload1> [payload2...]")
+				break
+			}
+			topicName := string(cmd.Args[0])
+			payloads := cmd.Args[1:]
+			count, err := s.broker.PublishBatch(topicName, payloads)
+			if err != nil {
+				_ = writer.WriteError(err.Error())
+			} else {
+				_ = writer.WriteInteger(int64(count))
+			}
+
+		case "VMQ.BROADCAST":
+			if len(cmd.Args) != 2 {
+				_ = writer.WriteError("usage: VMQ.BROADCAST <channel> <message>")
+				break
+			}
+			receivers := s.broker.Broadcast(string(cmd.Args[0]), cmd.Args[1])
+			_ = writer.WriteInteger(int64(receivers))
+
 		case "VMQ.STATS":
 			statsBytes, _ := json.Marshal(s.broker.Stats())
 			_ = writer.WriteBulkString(statsBytes)
