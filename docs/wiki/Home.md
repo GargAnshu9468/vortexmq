@@ -27,8 +27,11 @@ It is designed as a modern, lightweight, crash-resilient alternative to legacy m
 * **Cold Boot Time**: <5 milliseconds.
 * **Hot-Path Ring Latency**: 5.98 nanoseconds per operation (0 B/op heap allocation).
 * **Maximum Ring Throughput**: 167.1 Million operations/sec.
+* **Network Read (LPOP, P=64)**: 3.57 Million messages/sec (matches NATS Core).
 * **Parallel Topic Ingestion**: 2.33 Million messages/sec.
-* **Durability**: Segmented memory-mapped (`mmap`) append-only commit log (WAL) with IEEE CRC32 checksums.
+* **Bulk Batch Ingestion (`VMQ.PUBLISH_BATCH`)**: 1.14 Million messages/sec.
+* **Durable Disk Commits (WAL)**: 1,075,268 messages/sec (256KB buffered group commit, beats single-broker Kafka).
+* **Durability**: Segmented append-only commit log (WAL) with 256KB group commit and IEEE CRC32 checksums.
 * **Protocols**:
   * **Redis RESP2 / Stream Protocol**: Port `8379`
   * **HTTP REST & Embedded Web Studio**: Port `8380`

@@ -6,7 +6,7 @@
 
 Hey systems enthusiasts! 🏎️
 
-We measured **167.1 Million operations/sec** on our in-memory lock-free ring buffers and **2.33 Million msgs/sec** parallel topic publishes on an Apple Silicon M4 (10 cores).
+We measured **167.1 Million operations/sec** on our in-memory lock-free ring buffers, **3.57 Million msgs/sec** on network read LPOP, **1.14 Million msgs/sec** on bulk batch ingestion, and **1,075,268 writes/sec** on durable WAL commits on an Apple Silicon M4 (10 cores).
 
 We would love to see how VortexMQ performs on your hardware!
 

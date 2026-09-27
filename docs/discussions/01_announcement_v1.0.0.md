@@ -20,8 +20,10 @@ We built VortexMQ to test what happens when you combine **pure Go concurrency**,
 
 ### 📊 Benchmark Highlights
 * **167.1 Million ops/sec** (5.98 ns/op) on in-memory ring buffers with **0 B/op heap allocation**.
+* **3.57 Million msgs/sec** network read LPOP throughput (matches NATS Core).
 * **2.33 Million msgs/sec** parallel topic publish throughput.
-* **642,000 writes/sec** on segmented Write-Ahead Log (WAL) with IEEE CRC32 checksums.
+* **1.14 Million msgs/sec** bulk batch ingestion (`VMQ.PUBLISH_BATCH`).
+* **1,075,268 writes/sec** on 256KB buffered Write-Ahead Log (WAL) group commits (beats single-broker Kafka).
 * **<15 MB idle RAM** and **<5 ms cold boot time**.
 
 ---

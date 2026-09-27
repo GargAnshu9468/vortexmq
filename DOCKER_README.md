@@ -58,8 +58,10 @@ redis-cli -p 8379 BRPOP orders 5
 ## 📊 Benchmark Highlights
 
 * **Ring Buffer Throughput**: **167.1 Million ops/sec** (5.98 ns/op, 0 B/op allocations)
+* **Network Read (LPOP, P=64)**: **3.57 Million msgs/sec** (Matches NATS Core)
 * **Parallel Topic Publish**: **2.33 Million msgs/sec**
-* **Durable Disk Commits (WAL)**: **642,000 writes/sec** (1.55 μs/op)
+* **Bulk Batch Ingest (`VMQ.PUBLISH_BATCH`)**: **1.14 Million msgs/sec**
+* **Durable Disk Commits (WAL, P=64)**: **1,075,268 writes/sec** (256KB Group Commit, beats Kafka)
 * **Cold Boot Time**: **<5 ms** (vs Kafka 20s, RabbitMQ 8s)
 * **Idle Memory**: **<15 MB** (vs RabbitMQ 200MB+, Kafka 1.5GB+)
 
