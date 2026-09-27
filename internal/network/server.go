@@ -86,7 +86,9 @@ func (s *Server) acceptLoop() {
 }
 
 func (s *Server) handleConnection(conn net.Conn) {
+	writer := protocol.NewWriter(conn)
 	defer func() {
+		_ = writer.Flush()
 		_ = conn.Close()
 		s.mu.Lock()
 		delete(s.conns, conn)
@@ -102,7 +104,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 	}
 
 	reader := protocol.NewReader(conn)
-	writer := protocol.NewWriter(conn)
 	authenticated := s.cfg.Password == ""
 
 	for {
@@ -113,6 +114,9 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 		if !authenticated && cmd.Name != "AUTH" && cmd.Name != "QUIT" {
 			_ = writer.WriteError("NOAUTH Authentication required.")
+			if reader.Buffered() == 0 {
+				_ = writer.Flush()
+			}
 			continue
 		}
 
@@ -134,7 +138,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "AUTH":
 			if len(cmd.Args) != 1 {
 				_ = writer.WriteError("wrong number of arguments for 'auth'")
-				continue
+				break
 			}
 			if s.cfg.Password != "" && string(cmd.Args[0]) == s.cfg.Password {
 				authenticated = true
@@ -171,7 +175,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "LPUSH":
 			if len(cmd.Args) < 2 {
 				_ = writer.WriteError("wrong number of arguments for 'lpush'")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			count := 0
@@ -186,7 +190,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "RPUSH":
 			if len(cmd.Args) < 2 {
 				_ = writer.WriteError("wrong number of arguments for 'rpush'")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			count := 0
@@ -201,7 +205,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "LPOP":
 			if len(cmd.Args) < 1 {
 				_ = writer.WriteError("wrong number of arguments for 'lpop'")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			msg, ok := s.broker.Consume(topicName, 0)
@@ -214,7 +218,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "RPOP":
 			if len(cmd.Args) < 1 {
 				_ = writer.WriteError("wrong number of arguments for 'rpop'")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			msg, ok := s.broker.Consume(topicName, 0)
@@ -227,7 +231,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "BRPOP", "BLPOP":
 			if len(cmd.Args) < 2 {
 				_ = writer.WriteError("wrong number of arguments for blocking pop")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			timeoutSec, _ := strconv.Atoi(string(cmd.Args[len(cmd.Args)-1]))
@@ -245,7 +249,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		case "LLEN":
 			if len(cmd.Args) != 1 {
 				_ = writer.WriteError("wrong number of arguments for 'llen'")
-				continue
+				break
 			}
 			topicName := string(cmd.Args[0])
 			if t, ok := s.broker.GetTopic(topicName); ok {
@@ -434,6 +438,10 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 		default:
 			_ = writer.WriteError(fmt.Sprintf("unknown command '%s'", cmd.Name))
+		}
+
+		if reader.Buffered() == 0 {
+			_ = writer.Flush()
 		}
 	}
 }

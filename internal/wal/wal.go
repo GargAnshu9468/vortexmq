@@ -1,6 +1,7 @@
 package wal
 
 import (
+	"bufio"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
@@ -37,6 +38,7 @@ type WAL struct {
 	dir         string
 	policy      FsyncPolicy
 	activeFile  *os.File
+	bufWriter   *bufio.Writer
 	segmentID   int
 	maxSegSize  int64
 	currentSize int64
@@ -66,6 +68,7 @@ func OpenWAL(dir string, policy FsyncPolicy) (*WAL, error) {
 	}
 	stat, _ := f.Stat()
 	w.activeFile = f
+	w.bufWriter = bufio.NewWriterSize(f, 256*1024) // 256KB buffered group writer
 	w.segmentID = 1
 	if stat != nil {
 		w.currentSize = stat.Size()
@@ -121,20 +124,26 @@ func (w *WAL) writeRecord(op byte, payload []byte) error {
 	buf := make([]byte, totalLen)
 	binary.BigEndian.PutUint32(buf[0:4], totalLen)
 
-	// Checksum over OpCode + Payload
-	checksum := crc32.ChecksumIEEE(append([]byte{op}, payload...))
+	// Checksum over OpCode + Payload without intermediate allocation
+	crc := crc32.NewIEEE()
+	crc.Write([]byte{op})
+	crc.Write(payload)
+	checksum := crc.Sum32()
 	binary.BigEndian.PutUint32(buf[4:8], checksum)
 	buf[8] = op
 	copy(buf[9:], payload)
 
-	n, err := w.activeFile.Write(buf)
+	n, err := w.bufWriter.Write(buf)
 	if err != nil {
 		return err
 	}
 	w.currentSize += int64(n)
 
 	if w.policy == FsyncAlways {
+		_ = w.bufWriter.Flush()
 		_ = w.activeFile.Sync()
+	} else if w.bufWriter.Buffered() >= 128*1024 {
+		_ = w.bufWriter.Flush()
 	}
 
 	// Segment rotation if exceeds max segment size
@@ -146,6 +155,9 @@ func (w *WAL) writeRecord(op byte, payload []byte) error {
 }
 
 func (w *WAL) rotateSegment() {
+	if w.bufWriter != nil {
+		_ = w.bufWriter.Flush()
+	}
 	_ = w.activeFile.Sync()
 	_ = w.activeFile.Close()
 
@@ -154,6 +166,7 @@ func (w *WAL) rotateSegment() {
 	f, err := os.OpenFile(segPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err == nil {
 		w.activeFile = f
+		w.bufWriter = bufio.NewWriterSize(f, 256*1024)
 		w.currentSize = 0
 	}
 }
@@ -163,6 +176,9 @@ func (w *WAL) Sync() {
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	if w.activeFile != nil && !w.closed {
+		if w.bufWriter != nil {
+			_ = w.bufWriter.Flush()
+		}
 		_ = w.activeFile.Sync()
 	}
 }
@@ -243,6 +259,9 @@ func (w *WAL) Close() error {
 	}
 
 	if w.activeFile != nil {
+		if w.bufWriter != nil {
+			_ = w.bufWriter.Flush()
+		}
 		_ = w.activeFile.Sync()
 		return w.activeFile.Close()
 	}

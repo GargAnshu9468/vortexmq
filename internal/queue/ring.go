@@ -59,9 +59,14 @@ func (rb *RingBuffer) Push(msg *Message) bool {
 		return false
 	}
 
-	// If full, expand buffer
+	// If full, expand buffer up to 16M elements (prevents unbounded memory leak/OOM)
 	if rb.tail-rb.head >= rb.capacity {
-		rb.grow()
+		if rb.capacity >= 16777216 {
+			// Drop oldest entry under catastrophic saturation
+			rb.head++
+		} else {
+			rb.grow()
+		}
 	}
 
 	rb.nodes[rb.tail&rb.mask] = msg
@@ -80,7 +85,11 @@ func (rb *RingBuffer) PushFront(msg *Message) bool {
 	}
 
 	if rb.tail-rb.head >= rb.capacity {
-		rb.grow()
+		if rb.capacity >= 16777216 {
+			rb.tail--
+		} else {
+			rb.grow()
+		}
 	}
 
 	rb.head--

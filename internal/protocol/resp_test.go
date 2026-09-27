@@ -62,6 +62,7 @@ func TestRESPWriter(t *testing.T) {
 	_ = w.WriteInteger(42)
 	_ = w.WriteBulkString([]byte("hello"))
 	_ = w.WriteError("unknown command")
+	_ = w.Flush()
 
 	expected := "+PONG\r\n:42\r\n$5\r\nhello\r\n-ERR unknown command\r\n"
 	if buf.String() != expected {
