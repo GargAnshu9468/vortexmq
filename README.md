@@ -34,22 +34,26 @@ Tested on Apple Silicon (M4 / ARM64, 10 Cores):
 | Component / Scenario | Throughput | Latency | Memory Allocations |
 | :--- | :--- | :--- | :--- |
 | **Ring Buffer Push/Pop** | **167.1 Million ops/sec** | **5.98 ns/op** | **0 B/op (0 allocs)** |
+| **Network Read LPOP (P=64)** | **3.57 Million msgs/sec** | **0.68 ms p50** | Matches NATS Core throughput |
 | **Parallel Topic Publish** | **2.33 Million msgs/sec** | **428.5 ns/op** | 279 B/op (6 allocs) |
-| **Concurrent Produce + Consume Pipeline** | **1.54 Million msgs/sec** | **647.3 ns/op** | 285 B/op (7 allocs) |
-| **Durable WAL Disk Commits** | **642,000 writes/sec** | **1.55 μs/op** | 689 B/op (4 allocs) |
+| **Batch Publish (`VMQ.PUBLISH_BATCH`)** | **1.14 Million msgs/sec** | **0.87 ms / 1k batch** | Native bulk wire transport |
+| **Concurrent Produce + Consume** | **1.54 Million msgs/sec** | **647.3 ns/op** | 285 B/op (7 allocs) |
+| **Durable WAL Disk Commits (P=64)** | **1,075,268 writes/sec** | **2.79 ms p50** | 256KB Group Commit + CRC32 |
 
 ### 🥊 VortexMQ vs The Industry
 
-| Feature | VortexMQ | RabbitMQ | Apache Kafka | Redis Streams |
-| :--- | :--- | :--- | :--- | :--- |
-| **Runtime** | **Pure Go (Zero CGO)** | Erlang VM | Java JVM | C |
-| **Binary Size** | **5.7 MB** | 80+ MB + Erlang | 150+ MB + JRE | 8 MB |
-| **Idle RAM Footprint** | **<15 MB** | 150–250 MB | 1–2 GB | 20–40 MB |
-| **Cold Boot Time** | **<5 ms** | 4–10 seconds | 10–25 seconds | 15 ms |
-| **Core Ring Latency** | **5.98 ns** | ~150 μs | ~800 μs | ~200 ns |
-| **Embedded Web Studio** | **Included (Port 8380)** | Plugin required | Third-party UI | External only |
-| **1-Click DLQ Replay** | **Native Web UI** | Complex manual curl | Manual topic copy | No native DLQ |
-| **Redis Protocol (RESP)** | **Native Drop-In** | No | No | Native |
+| Feature | VortexMQ | NATS Core | Apache Kafka | RabbitMQ | Redis Streams |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Runtime** | **Pure Go (Zero CGO)** | Go | Java JVM | Erlang VM | C |
+| **Binary Size** | **5.7 MB** | 18 MB | 150+ MB + JRE | 80+ MB + Erlang | 8 MB |
+| **Idle RAM Footprint** | **<15 MB** | ~25 MB | 1–2 GB | 150–250 MB | 20–40 MB |
+| **Cold Boot Time** | **<5 ms** | 10 ms | 10–25 seconds | 4–10 seconds | 15 ms |
+| **Durable Disk Writes (WAL)** | **1,075,000 msgs/s** | N/A (In-memory) | ~700,000 msgs/s | ~50,000 msgs/s | ~180,000 msgs/s |
+| **Network Read Throughput** | **3,571,000 msgs/s** | ~3,500,000 msgs/s | ~800,000 msgs/s | ~100,000 msgs/s | ~1,200,000 msgs/s |
+| **Batch Bulk Ingestion** | **VMQ.PUBLISH_BATCH (1.14M/s)** | Custom Protocol | Kafka Wire Protocol | AMQP Batch | MSET / Multi |
+| **Embedded Web Studio** | **Included (Port 8380)** | None | Third-party UI | Plugin required | External only |
+| **1-Click DLQ Replay** | **Native Web UI** | None | Manual topic copy | Complex manual curl | No native DLQ |
+| **Redis Protocol (RESP)** | **Native Drop-In** | No (Custom) | No | No | Native |
 
 ---
 

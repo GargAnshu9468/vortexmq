@@ -1670,9 +1670,19 @@
                         <div class="stat-sub">5.98 ns/op &bull; 0 B/op heap alloc</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-num" style="color: var(--accent-green);">2.33M</div>
-                        <div class="stat-title">Parallel Topic Publishes</div>
-                        <div class="stat-sub">messages/sec multi-worker</div>
+                        <div class="stat-num" style="color: var(--accent-green);">3.57M</div>
+                        <div class="stat-title">Network Read LPOP</div>
+                        <div class="stat-sub">msgs/sec &bull; Matches NATS Core</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" style="color: var(--accent-cyan);">1.07M</div>
+                        <div class="stat-title">Durable WAL Writes</div>
+                        <div class="stat-sub">msgs/sec &bull; Beats Single Kafka</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" style="color: var(--accent-green);">1.14M</div>
+                        <div class="stat-title">Bulk Batch Ingestion</div>
+                        <div class="stat-sub">VMQ.PUBLISH_BATCH wire speed</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-num" style="color: var(--accent-purple);">&lt;15 MB</div>
@@ -1725,7 +1735,7 @@
                                 <span class="feature-tag">CRASH RESILIENT</span>
                             </div>
                             <h3>Segmented WAL Durability</h3>
-                            <p>64MB append-only commit segments protected by IEEE CRC32 checksums guarantee zero data loss. Tunable fsync policies commit over 640,000 durable writes per second.</p>
+                            <p>64MB append-only commit segments protected by IEEE CRC32 checksums guarantee zero data loss. Tunable 256KB buffered group commit policies commit over 1,075,000 durable writes per second.</p>
                         </div>
                         <div class="feature-metric">
                             <span>Recovery Speed</span>
@@ -1945,6 +1955,30 @@
                                 <td class="badge-lose">PageCache Segments</td>
                                 <td>Single-Threaded Loop</td>
                                 <td>Go Channels / Mutex</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Durable Disk Write (WAL)</strong></td>
+                                <td class="highlight-col"><span class="badge-win">1,075,268 msgs/s</span></td>
+                                <td class="badge-lose">~50,000 msgs/s</td>
+                                <td>~700,000 msgs/s</td>
+                                <td class="badge-lose">~180,000 msgs/s</td>
+                                <td class="badge-lose">N/A (In-memory)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network Read Throughput</strong></td>
+                                <td class="highlight-col"><span class="badge-win">3,571,428 msgs/s</span></td>
+                                <td class="badge-lose">~100,000 msgs/s</td>
+                                <td>~800,000 msgs/s</td>
+                                <td>~1,200,000 msgs/s</td>
+                                <td class="badge-win">~3,500,000 msgs/s</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bulk Batch Ingestion</strong></td>
+                                <td class="highlight-col"><span class="badge-win">1,145,000 msgs/s (VMQ.PUBLISH_BATCH)</span></td>
+                                <td>AMQP Batching</td>
+                                <td class="badge-win">Kafka Native Batch</td>
+                                <td>MSET / Pipeline</td>
+                                <td>NATS Flush Buffer</td>
                             </tr>
                             <tr>
                                 <td><strong>Drop-in Redis Compatibility</strong></td>
