@@ -50,7 +50,7 @@ func main() {
 	printBanner()
 
 	// 1. Initialize WAL Persistence if enabled
-	var walEngine *wal.WAL
+	var walEngine queue.BrokerWAL
 	if *enableWAL {
 		policy := wal.FsyncEverySec
 		switch *fsyncPolicyStr {

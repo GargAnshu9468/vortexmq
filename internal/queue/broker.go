@@ -2,6 +2,7 @@ package queue
 
 import (
 	"errors"
+	"reflect"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -46,6 +47,12 @@ type Broker struct {
 
 // NewBroker constructs a Broker instance with an optional persistence WAL.
 func NewBroker(wal BrokerWAL) *Broker {
+	if wal != nil {
+		// Guard against typed nil interface values
+		if val := reflect.ValueOf(wal); val.Kind() == reflect.Ptr && val.IsNil() {
+			wal = nil
+		}
+	}
 	b := &Broker{
 		topics:      make(map[string]*Topic),
 		wal:         wal,
